@@ -4,6 +4,8 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 import { registerBlockType } from '@wordpress/blocks';
+import ServerSideRender from '@wordpress/server-side-render';
+import { useBlockProps } from '@wordpress/block-editor';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.

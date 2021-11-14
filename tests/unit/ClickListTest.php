@@ -2,10 +2,39 @@
 
 use Codeception\TestCase\WPTestCase;
 use FCFS\Action_MakeFCFS;
-use FCFS\Action_VisitFCFS_Page;
+use FCFS\Action_Click;
 use FCFS\ClickList;
 
-class UserClickListTest extends WPTestCase {
+class ClickListTest extends WPTestCase {
+
+	/**
+	 * @test
+	 * ClickList->doSetSettings() test
+	 */
+	public function doSetSettingsTest(){
+		$data   = [
+			'post_title'   => "Test Title",
+			'post_content' => "lorum ipsum"
+		];
+		$postID = wp_insert_post( $data );
+		$status = "open";
+		$maxUsers = 5;
+
+		$args = [
+			'post-id' => $postID,
+			'status'	=> $status,
+			'max-users'	=> $maxUsers,
+		];
+		$ClickList = new ClickList();
+		$ClickList->doSetSettings($args);
+
+		$DBstatus = get_post_meta( $postID, 'fcfs', true);
+		$DBmaxUsers = get_post_meta( $postID, 'fcfs-max-users', true);
+
+		$this->assertEquals($status, $DBstatus);
+		$this->assertEquals($maxUsers, $DBmaxUsers);
+	}
+
 	/**
 	 * @test
 	 * classes should be instantiable
@@ -13,7 +42,7 @@ class UserClickListTest extends WPTestCase {
 	public function classesShouldBeInstantiable() {
 		$UserClickList = new ClickList();
 		$Action_MakeFCFS = new Action_MakeFCFS();
-		$Action_VisitFCFS_Page = new Action_VisitFCFS_Page();
+		$Action_VisitFCFS_Page = new Action_Click();
 	}
 
 	/**
@@ -30,7 +59,7 @@ class UserClickListTest extends WPTestCase {
 		$result = $ClickList->returnArrayOfUserIDs( $postID );
 
 		//Then it should return the list of IDs
-		$this->assertEquals( $userIDs, $result );
+ 		$this->assertEquals( $userIDs, $result );
 	}
 
 	/**
@@ -66,41 +95,11 @@ class UserClickListTest extends WPTestCase {
 		//When the method returnArrayOfUserNames is called
 		$ClickList = new ClickList();
 
-		//Then it should return "No users yet"
-		$expected = "No users yet";
-		//not just a string! $expected = "No users yet";
+		$expected = [];
 		$given    = $ClickList->returnArrayOfUserNames( $postID );
-
 		$this->assertEquals( $expected, $given );
 	}
 
-	/**
-	 * @test
-	 * edge case: the post isn't a registered FCFS
-	 */
-	public function edgeCase_thePostIsNotFCFS(){
-		//Given there is a post that is NOT a FCFS post
-		$data   = [
-			'post_title'   => "Test Title",
-			'post_content' => "lorum ipsum"
-		];
-		$postID = wp_insert_post( $data );
-
-		//In this test, we will NOT make the post an FCFS post:
-		/*
-		$Action = new Action_MakeFCFS;
-		$Action->makeFCFS( $postID );
-		*/
-
-		//When the method returnArrayOfUserNames is called
-		$ClickList = new ClickList();
-
-		//Then it should return "Not an FCFS post"
-		$expected = "ERROR: Not an FCFS post";
-		$given    = $ClickList->returnArrayOfUserNames( $postID );
-
-		$this->assertEquals( $expected, $given );
-	}
 
 	private function createMockPost() {
 		//This function mocks a FCFS post. However, there are no clicks yet.
@@ -116,7 +115,7 @@ class UserClickListTest extends WPTestCase {
 	}
 
 	private function createMockClickListInDB( $postID ) {
-		$Action = new Action_VisitFCFS_Page();
+		$Action = new Action_Click();
 		//Given there are 5 users in the site:
 		$userID1 = $this->factory->user->create( array(
 			'user_email' => 'email1@email1.com',
@@ -159,9 +158,9 @@ class UserClickListTest extends WPTestCase {
 		$time    = 555;
 		$Action->doAction( $userID5, $postID, $time );
 
+		update_post_meta( $postID, "max-users", 10 );
 		$userIDs = [ $userID1, $userID2, $userID3, $userID4, $userID5 ];
 
 		return $userIDs;
 	}
-
 }

@@ -22,11 +22,10 @@ modules:
       cleanup: false
       # sudo mysqldump -ppassword wordpress > /var/www/html/wp-content/plugins/fcfs-block/tests/_data/dump.sql
       populator: 'mysql -u $user -ppassword -h $host $dbname < $dump'
-      url: 'http://3.129.13.214/'
+      url: 'https://generalchicken.guru/'
       tablePrefix: wp_
     WPWebDriver:
-      #url: 'http://ec2-13-59-196-39.us-east-2.compute.amazonaws.com/'
-      url: 'http://3.129.13.214/'
+      url: 'https://generalchicken.guru/'
       window_size: 400, 300
       #window_size: maximize
       adminUsername: 'Codeception'

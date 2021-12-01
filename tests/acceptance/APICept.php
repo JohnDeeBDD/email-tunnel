@@ -2,6 +2,11 @@
 $I = new AcceptanceTester($scenario);
 $I->wantTo('test an API');
 
+$commandToGetLocalIP = "dig +short myip.opendns.com @resolver1.opendns.com";
+$IP = shell_exec($commandToGetLocalIP);
+$IP = substr_replace($IP, "", -1);
+$I->reconfigureThisVariable(['url' => "http://$IP/"]);
+
 $I->loginAsAdmin();
 $I->amOnPage('/test-post-one/');
 $I->see("Content of test post 1.");

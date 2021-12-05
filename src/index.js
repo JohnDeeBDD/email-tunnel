@@ -3,6 +3,7 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
+console.log("index.js loaded");
 import { registerBlockType } from '@wordpress/blocks';
 import ServerSideRender from '@wordpress/server-side-render';
 import { useBlockProps } from '@wordpress/block-editor';

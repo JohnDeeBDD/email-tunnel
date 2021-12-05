@@ -18,7 +18,6 @@ class ClickList
 			$id = intval($id);
 			if (is_numeric($id) && (!($id == 0))) {
 				$user_info = \get_userdata($id);
-					//var_dump($id);die("ClickList 23");
 				array_push($userNames, $user_info->user_login);
 			}
 		}
@@ -60,10 +59,11 @@ class ClickList
 		//die("registerRoute_settings");
 		//This route enables a user to control the settings of a particular FCFS post
 		register_rest_route(
+			//die("63");
 			"fcfs/v1",
 			"settings",
 			array(
-				'methods' => ['POST', 'GET'],
+				'methods' => ['POST'],
 				'callback' => function () {
 					$this->doSetSettings($_REQUEST);
 					return new \WP_REST_Response(
@@ -75,17 +75,58 @@ class ClickList
 					);
 				},
 				'permission_callback' => function () {
+					return true;
 					return (current_user_can('edit_post', $_REQUEST['post-id']));
 				},
 				'validate_callback' => function () {
 					if (isset($_REQUEST['post-id']) && (is_numeric($_REQUEST['post-id']))) {
-						return TRUE;
-					} else {
-						return FALSE;
-					}
+						//if ( get_post_status ( $_REQUEST['post-id']) ) {
+							return TRUE;
+						}
+					//}
+					return FALSE;
 				}
 			)
 		);
+		
+		register_rest_route(
+			"fcfs/v1",
+			"settings",
+			array(
+				'methods' => ['GET'],
+				'callback' => function () {
+					//$this->doSetSettings($_REQUEST);
+					return new \WP_REST_Response(
+						[
+							'status' => 200,
+							'response' => "OK",
+							'body_response' => ($this->returnArrayOfPostSettings($_REQUEST['post-id'])),
+						]
+					);
+				},
+				'permission_callback' => function () {
+					return true;
+					//return (current_user_can('edit_post', $_REQUEST['post-id']));
+				},
+				'validate_callback' => function () {
+					//return true;
+					if (isset($_REQUEST['post-id']) && (is_numeric($_REQUEST['post-id']))) {
+						if ( get_post_status ( $_REQUEST['post-id']) ) {
+							return TRUE;
+						}
+					}
+					return FALSE;
+				}
+			)
+		);
+	}
+	
+
+	public function returnArrayOfPostSettings($postID){
+		$settings = [];
+		$settings['fcfs'] = get_post_meta($postID, 'fcfs');
+		$settings['max-users'] = get_post_meta($postID, 'max-users');
+		return $settings;
 	}
 
 	public function registerRoute_return_array_of_users_who_have_clicked()
@@ -115,16 +156,18 @@ class ClickList
 
 	public function validateNonce($nonce)
 	{
-		if (!wp_verify_nonce($nonce, "fcfs-click")) {
-			die("SOMETHING IS WRONG.");
+		if (!wp_verify_nonce($nonce, "fcfs-do-click-nonce")) {
+			die("SOMETHING IS WRONG. Clicklist line 121");
 		}
 	}
 
 	public function listenForClickSubmission()
 	{
 		//die("listenForClickSubmission");
-		if (isset($_POST['fcfs-nonce'])) {
-			$this->validateNonce($_POST['fcfs-nonce']);
+		if (isset($_POST['fcfs-do-click-nonce'])) {
+			//echo($_POST['fcfs-do-click-nonce']);die();
+			//die("a click is incoming!");
+			$this->validateNonce($_POST['fcfs-do-click-nonce']);
 			global $post;
 			$postID = $post->ID;
 			$Action = new Action_Click();
@@ -165,8 +208,8 @@ class ClickList
 	{
 		//die("registerRoute_settings - 152");
 		$this->registerRoute_settings();
-		//$this->listenForClickSubmission();
-		//$this->registerRoute_return_array_of_users_who_have_clicked();
-		//$this->registerRoute_do_click_clicklist();
+		$this->listenForClickSubmission();
+		$this->registerRoute_return_array_of_users_who_have_clicked();
+		$this->registerRoute_do_click_clicklist();
 	}
 }

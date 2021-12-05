@@ -35,7 +35,7 @@ class Frontend{
 
 	public function returnCallToActionButtonHTML($postID){
 		$ClickToGetOnTheList = __("Click to get on the list", "fcfs");
-		$nonce = wp_create_nonce( "fcfs-click");
+		$nonce = wp_create_nonce( "fcfs-do-click-nonce");
 		$output = "
 <div id = 'fcfs-clicker-button-div-$postID' class = 'fcfs-clicker-button-div'>
 	<form method = 'post'>

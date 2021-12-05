@@ -26,6 +26,7 @@ class API_ClickList{
 
     public function doRegisterRoutes(){
 		register_rest_route(
+			//die("29");
 			$this->namespace,
 			"settings",
 			array(
@@ -34,6 +35,7 @@ class API_ClickList{
 					return ($this->doAction($_REQUEST));
 				},
 				'permission_callback' => function () {
+					return true;
 					$capability = $this->capability;
 					if (!(current_user_can($capability))) {
 						return FALSE;
@@ -41,6 +43,7 @@ class API_ClickList{
 					return TRUE;
 				},
 				'validate_callback' => function () {
+					//return true;
 					if(isset($_REQUEST['post-id']) && (is_numeric($_REQUEST['post-id']))){
 						return TRUE;
 					}else{
@@ -56,6 +59,7 @@ class API_ClickList{
 			array(
 				'methods' => ['POST'],
 				'callback' => function () {
+					return "something somgthing";
 					return ($this->doAction($_REQUEST));
 				},
 				'permission_callback' => function () {

@@ -10,9 +10,22 @@ $I->reconfigureThisVariable(['url' => "http://$IP/"]);
 $I->loginAsAdmin();
 $I->amOnPage('/test-post-one/');
 $I->see("Content of test post 1.");
-$JS="FCFS.doAJAX('/wp-json/fcfs/v1/settings/', {'_wpnonce': wpApiSettings.nonce, 'status':'open', 'post-id':1555, 'max-users':123})";
+
+
+//doClick
+
+
+
+//This is a made up postID, it should NOT exist:
+$postID = 123231123;
+$JS="FCFS.getPostSettings($postID)";
 $I->executeJS($JS);
 $I->waitForJS("return jQuery.active == 0;", 10);
 $result = $I->executeJS("return FCFS.AJAXreturnedData;");
 
-var_dump($result);
+$result = $result['body_response'];
+
+
+$txt = var_export($result, true);
+
+$I->assertEquals($txt, "FCFS Error, post does not exist");

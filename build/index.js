@@ -266,6 +266,7 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
+console.log("index.js loaded");
 
 
 
@@ -324,6 +325,7 @@ __webpack_require__.r(__webpack_exports__);
  * @see https://developer.wordpress.org/block-editor/packages/packages-i18n/
  */
 
+console.log("save.js is loaded");
 /**
  * React hook that is used to mark the block wrapper element.
  * It provides all the necessary props like the class name.

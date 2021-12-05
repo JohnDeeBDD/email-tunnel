@@ -5,6 +5,7 @@ namespace FCFS;
 class Action_Click{
 
 	public function doClick(){
+		//die("I'm doing the click!");
 		global $post;
 		$postID = $post->ID;
 		$meta = get_post_meta($postID, "fcfs", true);
@@ -28,8 +29,8 @@ class Action_Click{
 
 	public function listenForClick(){
 		if (isset($_POST['fcfs-do-click-nonce'])){
-			if(!(\wp_verify_nonce($_POST['fcfs-do-click-nonce'], "fcfs-click"))){
-				die("SOMETHING IS VERY WRONG. This shouldn't be happening.");
+			if(!(\wp_verify_nonce($_POST['fcfs-do-click-nonce'], "fcfs-do-click-nonce"))){
+				die("SOMETHING IS VERY WRONG. This shouldn't be happening. Action_Click line 32");
 			}
 			$this->doClick();
 		}

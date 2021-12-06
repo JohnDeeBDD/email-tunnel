@@ -15,6 +15,8 @@
 
 namespace FCFS;
 
+//die("fcfs-block");
+
 require_once (plugin_dir_path(__FILE__). 'src/FCFS/autoloader.php');
 
 \add_action( 'init', function(){register_block_type( __DIR__, array('render_callback' => [new Frontend, 'returnUI']) );} );

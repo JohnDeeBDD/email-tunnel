@@ -3,7 +3,7 @@
 namespace FCFS;
 
 class Shortcode_FCFS{
-    
+
     public function doReturnShortcode(){
         global $post;
         $postID = $post->ID;
@@ -14,16 +14,16 @@ class Shortcode_FCFS{
         //$output = $output . $this->returnJS($postID);
         return $output;
     }
-    
+
     public function returnJS($postID){
         $output = <<<OUTPUT
 <script>
-//alert("JS HERE! post $postID");
+alert("JS HERE! post $postID");
 </script>
 OUTPUT;
         return $output;
     }
-    
+
     public function returnHTML($postID){
         $List = new UserClickList();
         $names = $List->returnArrayOfUserNames($postID);
@@ -31,7 +31,7 @@ OUTPUT;
         if($names == "ERROR: Not an FCFS post"){
         	return;
         }
-        if($names == "No users yet"){
+        if($names == "No users line 34 shortcode fcfs yet"){
             return $names;
         }
         $output = "<ol>";
@@ -41,5 +41,5 @@ OUTPUT;
         $output = $output . "</ol>";
         return $output;
     }
-    
+
 }

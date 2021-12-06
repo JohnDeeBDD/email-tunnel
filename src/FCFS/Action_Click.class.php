@@ -27,6 +27,7 @@ class Action_Click{
 		add_post_meta( $postID, $key, $time);
 	}
 
+	/* this action has moved to class Clicklist
 	public function listenForClick(){
 		if (isset($_POST['fcfs-do-click-nonce'])){
 			if(!(\wp_verify_nonce($_POST['fcfs-do-click-nonce'], "fcfs-do-click-nonce"))){
@@ -35,5 +36,6 @@ class Action_Click{
 			$this->doClick();
 		}
 	}
+	*/
 
 }

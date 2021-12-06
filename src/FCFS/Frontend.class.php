@@ -26,8 +26,10 @@ class Frontend{
 			return;
 		}
 		$output = $output . "<ol id = 'fcfs-clicklist-ol-postid-$postID' class = 'fcfs-clicklist-ol'>The List:";
+		$liCounter = 1;
 		foreach($names as $name){
-			$output = $output . "<li>" . $name . "</li>";
+			$output = $output . "<li id = 'fcfs-clicklist-ol-li-$liCounter' >" . $name . "</li>";
+			$liCounter = $liCounter + 1;
 		}
 		$output = $output . "</ol>";
 		return $output;
@@ -61,10 +63,14 @@ OUTPUT;
 	}
 
     public function returnUI($atts = ""){
+		//die("frontened!");
 		global $post;
 		$postID = $post->ID;
-		$Action = new Action_Click();
-		$Action->listenForClick();
+
+		//remove: this is activated in the main plugin script
+		//$Action = new Action_Click();
+		//$Action->listenForClick();
+
 		if (\is_singular()) {
 			//Here we emit JS and allow for the "click" action
 			$atts['post-id'] = $postID;

@@ -24,9 +24,8 @@ node_modules/
 *.tgz
 
 # dotenv environment variables file
-.env
+
 /vendor/
 /tests/acceptance.yml
 /tests/_output/
 composer.lock
-/.idea/

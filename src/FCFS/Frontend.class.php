@@ -48,15 +48,30 @@ class Frontend{
 </div><!-- end: fcfs-clicker-button-div-$postID -->
 ";
 		if(current_user_can('edit_post', $postID)){
-			$output = $output . ($this->returnAdminAreaHTML());
+			$output = $output . ($this->returnEditorAreaHTML());
 		}
 		return $output;
 	}
 
-	public function returnAdminAreaHTML(){
+	public function returnEditorAreaHTML(){
 		$output = <<<OUTPUT
 <div id = 'fcfs-admin-settings-div'>
-	<h2>Admin Area</h2>
+	<h2>Editor Area</h2>
+	<div>
+		List Open / Closed
+	</div>
+	<div>
+		Max Users
+	</div>
+	<div>
+		List Text
+	</div>
+	<div>
+		Button Text
+	</div>
+	<div>
+		Closed Text
+	</div>
 </div><!-- end #fcfs-admin-settings-div -->
 OUTPUT;
 	return $output;

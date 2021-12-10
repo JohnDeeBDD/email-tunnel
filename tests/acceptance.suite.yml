@@ -6,7 +6,7 @@ modules:
     - WPWebDriver
     - Asserts
     - WPCLI
-    - WPLoader
+    #- WPLoader
   config:
     WPCLI:
       path: /var/www/html/
@@ -22,10 +22,10 @@ modules:
       cleanup: false
       # sudo mysqldump -ppassword wordpress > /var/www/html/wp-content/plugins/fcfs-block/tests/_data/dump.sql
       populator: 'mysql -u $user -ppassword -h $host $dbname < $dump'
-      url: 'http://13.58.115.16/'
+      url: 'http://18.220.47.185/'
       tablePrefix: wp_
     WPWebDriver:
-      url: 'http://13.58.115.16/'
+      url: 'http://18.220.47.185/'
       window_size: 400, 300
       #window_size: maximize
       adminUsername: 'Codeception'

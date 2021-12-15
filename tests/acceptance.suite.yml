@@ -17,15 +17,15 @@ modules:
       user: wordpressuser
       password: password
       dump: tests/_data/dump.sql
-      populate: true
+      populate: false
       #populate: false
       cleanup: false
       # sudo mysqldump -ppassword wordpress > /var/www/html/wp-content/plugins/fcfs-block/tests/_data/dump.sql
       populator: 'mysql -u $user -ppassword -h $host $dbname < $dump'
-      url: 'http://18.220.47.185/'
+      url: 'http://3.145.208.39/'
       tablePrefix: wp_
     WPWebDriver:
-      url: 'http://18.220.47.185/'
+      url: 'http://3.145.208.39/'
       window_size: 400, 300
       #window_size: maximize
       adminUsername: 'Codeception'

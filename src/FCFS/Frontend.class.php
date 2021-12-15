@@ -57,6 +57,7 @@ class Frontend{
 		$output = <<<OUTPUT
 <div id = 'fcfs-admin-settings-div'>
 	<h2>Editor Area</h2>
+
 	<div>
 		List Open / Closed
 	</div>

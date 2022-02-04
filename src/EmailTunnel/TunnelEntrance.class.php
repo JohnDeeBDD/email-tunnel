@@ -6,8 +6,8 @@ class TunnelEntrance{
     
     public function interceptOutgoingEmail($to, $subject, $message, $headers){
         //The url you wish to send the POST request to
-        $urlBase = "http://3.14.14.147";
-        $url = $urlBase . "/wp-json/email-tunnel/v1/tunnel-exit/";
+        $exitUrlBase = get_option("email_tunnel_exit_url_base");
+        $url = $exitUrlBase . "/wp-json/email-tunnel/v1/tunnel-exit/";
 
         //The data you want to send via POST
         $fields = [

@@ -14,8 +14,8 @@
 
 require_once (plugin_dir_path(__FILE__). 'src/EmailTunnel/autoloader.php');
 
-update_option( 'email_tunnel', "exit" );
-//update_option( 'email_tunnel', "entrance" );
+//update_option( 'email_tunnel_exit_url_base', 'MUST BE LOCALLY SET');
+update_option( 'email_tunnel', "entrance" );
 
 $tunnelStatus = get_option('email_tunnel', true);
 if($tunnelStatus == "entrance"){

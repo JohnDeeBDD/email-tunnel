@@ -1,6 +1,6 @@
 <?php
 
-namespace FCFS;
+namespace EmailTunnel;
 
 function autoload($className){
     $NS = __NAMESPACE__;

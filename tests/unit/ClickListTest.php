@@ -9,6 +9,45 @@ class ClickListTest extends WPTestCase {
 
 	/**
 	 * @test
+	 * ClickList->doGetSettings() test
+	 */
+	public function doGetSettingsTest(){
+		//Given there is a post with no meta data.
+		$data   = [
+			'post_title'   => "Test Title",
+			'post_content' => "lorum ipsum"
+		];
+		$postID = wp_insert_post( $data );
+		$ClickList = new ClickList();
+		//When doGetSettings($postID) is called
+		$settings = $ClickList->doGetSettings($postID);
+		 //Then this function should return information even though there is no data
+		$this->assertEquals("closed", $settings['status']);
+		$this->assertEquals("-1", $settings['max-users']);
+		$this->assertEquals("The List", $settings['list-text']);
+		$this->assertEquals("Click to get on the list", $settings['button-text']);
+		$this->assertEquals("CLOSED", $settings['closed-text']);
+
+
+
+		//Given the post has a previous setting of "open"
+		update_post_meta($postID, 'fcfs', "open");
+		//When doGetSettings($postID) is called
+		$settings = $ClickList->doGetSettings($postID);
+		//Then "open" should be returned
+		$this->assertEquals("open", $settings['status']);
+
+		//Given the post has a previous setting of "closed"
+		update_post_meta($postID, 'fcfs', "closed");
+		//When doGetSettings($postID) is called
+		$settings = $ClickList->doGetSettings($postID);
+		//Then "closed" should be returned
+		$this->assertEquals("closed", $settings['status']);
+
+
+	}
+	/**
+	 * @test
 	 * ClickList->doSetSettings() test
 	 */
 	public function doSetSettingsTest(){

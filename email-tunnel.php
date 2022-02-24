@@ -27,10 +27,10 @@ if($tunnelStatus == "entrance"){
   }
 }
 
-if($tunnelStatus == "exit"){
+//if($tunnelStatus == "exit"){
  $Exit = new EmailTunnel\TunnelExit;
  $Exit->openTunnelExit();
-}
+//}
 
 
 
@@ -66,6 +66,9 @@ function enableAdminJS(){
             );
         $Connections = new \EmailTunnel\Connections;
         $status = $Connections->getSiteStatus();
+        //var_dump($status);die();
+        
+        //$result = $TunnelExit->getExitDataForFrontened(1);
         wp_localize_script( 'email-tunnel-js', 'EmailTunnelStatusData', $status );    
         wp_enqueue_script('email-tunnel-js');
         }
@@ -91,9 +94,11 @@ add_filter( 'wp_is_application_passwords_available', '__return_true' );
 //add_action("init", "jimbo");
 function jimbo(){
     //die("xx");
-    $app_password = \WP_Application_Passwords::create_new_application_password(1, ["name" => "email-tunnel:https://google.com"]); 
+    //$app_password = \WP_Application_Passwords::create_new_application_password(1, ["name" => "email-tunnel:https://google.com"]); 
     
-    echo($app_password[0]);die();
+    //echo($app_password[0]);die();
     //\WP_Application_Passwords::set_user_application_passwords(1, [$app_password]);
-    
+    $TunnelExit = new EmailTunnel\TunnelExit;
+    $result = $TunnelExit->getExitDataForFrontened(1);
+    var_dump($result);die();
 }

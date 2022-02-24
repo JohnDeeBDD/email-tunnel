@@ -34,7 +34,13 @@ jQuery( document ).ready(function() {
 
 const EmailTunnel = {};
 
+EmailTunnel.clearVisualErrors = function(){
+    jQuery("#email-tunnel-entrance-connect-button-error-bad-http-scheme").hide();  
+    jQuery("#email-tunnel-entrance-connect-button-error").hide();      
+}
+
 EmailTunnel.doUserHasClickedEntranceConnectButton = function(){
+    EmailTunnel.clearVisualErrors();
     EmailTunnel.doRenderConnectButtonIntoWorkingState();
     EmailTunnel.doAjaxEntranceConnectionButtonPressed();
 }
@@ -51,27 +57,60 @@ EmailTunnel.doRenderConnectButtonBackToReadyState = function(){
     jQuery("#email-tunnel-entrance-button-spinner").hide();
 }
 
+EmailTunnel.isValidHttpUrl = function(string){
+  let url;
+  
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;  
+  }
+
+  //Either of these can be used:
+  //return url.protocol === "http:" || url.protocol === "https:";
+  return url.protocol === "https:";
+}
+
+
+EmailTunnel.entranceCredentialsAreValid_bool = function(url, code){
+    if(!(EmailTunnel.isValidHttpUrl(url))){
+        return false;
+    }
+    let prefix = url.substr(0, 8);
+    if (!( prefix == "https://")){
+        return false;    
+    }
+    return true;
+}
+
 EmailTunnel.doAjaxEntranceConnectionButtonPressed = function(){
     EmailTunnelStatusData._wpnonce = wpApiSettings.nonce;
     EmailTunnelStatusData.addExitUrl = jQuery("input[type=text][name=email-tunnel-exit-url-input]").val();
-    EmailTunnelStatusData.addExitCode = jQuery("input[type=text][name=email-tunnel-exit-code]").val();
-	jQuery.ajax({
-		url: "/wp-json/email-tunnel/v1/add-new-exit/",
-		data: EmailTunnelStatusData,
-		method: 'POST',
-		success: function (data) {
-		    console.log("success doAjaxEntranceConnectionButtonPressed");
-		    console.log(data);
-            EmailTunnel.doRenderConnectButtonBackToReadyState();
-            EmailTunnel.renderEntranceDivWithData(data);
-		},
-		error: function (errorThrown) {
-		    console.log("ERROR doAjaxEntranceConnectionButtonPressed");
-		    console.log(errorThrown);
-			console.log( errorThrown.responseText);
-			jQuery("#email-tunnel-entrance-connect-button-error").show();
-		}
-	});
+    EmailTunnelStatusData.addExitCode = jQuery("input[type=text][name=email-tunnel-exit-code-input]").val();
+    
+    const validation = EmailTunnel.entranceCredentialsAreValid_bool(EmailTunnelStatusData.addExitUrl, EmailTunnelStatusData.addExitCode);
+    if(validation){
+	    jQuery.ajax({
+	    	url: "/wp-json/email-tunnel/v1/add-new-exit/",
+		    data: EmailTunnelStatusData,
+		    method: 'POST',
+		    success: function (data) {
+    		    console.log("success doAjaxEntranceConnectionButtonPressed");
+	    	    console.log(data);
+                EmailTunnel.doRenderConnectButtonBackToReadyState();
+                EmailTunnel.renderEntranceDivWithData(data);
+		    },
+		    error: function (errorThrown) {
+    		    console.log("ERROR doAjaxEntranceConnectionButtonPressed");
+	    	    console.log(errorThrown);
+		    	console.log( errorThrown.responseText);
+			    jQuery("#email-tunnel-entrance-connect-button-error").show();
+		    }
+	    });
+     }else{
+        jQuery("#email-tunnel-entrance-connect-button-error-bad-http-scheme").fadeIn();
+        EmailTunnel.doRenderConnectButtonBackToReadyState();
+    }
 }
 
 
@@ -109,6 +148,9 @@ EmailTunnel.doRenderVisualAppearenceOfMainDivs = function(divToShow){
             //console.log("doRenderVisualAppearenceOfMainDivs case 'exit'");
             jQuery("#entrance-area-div").hide();
             jQuery("#exit-area-div").fadeIn();
+            EmailTunnel.exitCredData = [];
+            EmailTunnel.doAjaxExitCredData();
+            //console.log(EmailTunnel.exitCredData);
         break;
         
         case 'entrance':
@@ -121,6 +163,24 @@ EmailTunnel.doRenderVisualAppearenceOfMainDivs = function(divToShow){
         default:
         console.log('AN UNKNOWN ERROR HAS OCCURED. doRenderVisualAppearenceOfMainDivs()');
     }    
+}
+
+EmailTunnel.doAjaxExitCredData = function(){
+    EmailTunnelStatusData._wpnonce = wpApiSettings.nonce;
+    jQuery.ajax({
+		url: "/wp-json/email-tunnel/v1/tunnel-exit-ui-data",
+		data: EmailTunnelStatusData,
+		method: 'POST',
+		success: function (data) {
+			//console.log( "success: doSetTunnelStatusAJAX()");
+			//console.log("server response:");
+			console.log(data);
+		},
+		error: function (errorThrown) {
+		    console.log("Error: " + "EmailTunnel.doSetTunnelStatusAJAX()");
+			console.log( errorThrown );
+		}
+	});
 }
 
 EmailTunnel.doSetTunnelStatusAJAX = function (EmailTunnelStatusData){

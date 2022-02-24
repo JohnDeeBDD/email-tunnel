@@ -52,7 +52,7 @@ $StatusHTML
    Enter the URL of the tunnel exit
    <input type = "text" placeholder = "i.e. https://somesite.com" name = "email-tunnel-exit-url-input" id = "email-tunnel-exit-url-input" />
    Enter the code
-   <input type = "text" placeholder = "get on other website" id = "email-tunnel-exit-code" name = "email-tunnel-exit-code" />
+   <input type = "text" placeholder = "get on other website" id = "email-tunnel-exit-code-input" name = "email-tunnel-exit-code-input" />
    <div id = "email-tunnel-connect-entrance-item-submit-button-div">
    <div id = "email-tunnel-entrance-button-spinner" class = "spinner is-active" style = "display:none;"></div>
         <input type = "button" value = "Connect" id = "email-tunnel-connect-entrance-item-submit-button" name = "email-tunnel-connect-entrance-item-submit-button" />
@@ -60,6 +60,14 @@ $StatusHTML
    <div id = "email-tunnel-entrance-connect-button-error" style = "color:red;display:none;">
         An error has occured.
    </div><!-- end: #email-tunnel-entrance-connect-button-error -->
+    <div id = "email-tunnel-entrance-connect-button-error" style = "color:red;display:none;">
+        asdfasdfasf
+   </div><!-- end: #email-tunnel-entrance-connect-button-error -->
+   <div id = "email-tunnel-entrance-connect-button-error-bad-http-scheme" style = "color:red;display:none;">
+        Your must have SSL enabled on the exit site in the free version of this plugin.<br />
+        The Url should look like: 'https://somesite.com' <br />
+        Get Email-Tunnel Pro!
+   </div><!-- end: #email-tunnel-entrance-connect-button-error-bad-http-scheme -->
    
    
    <div id = "email-tunnel-entrance-data-div">ETED</div>

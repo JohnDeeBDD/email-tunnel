@@ -2,30 +2,11 @@ class_name: AcceptanceTester
 modules:
   enabled:
     - \Helper\Acceptance
-    - WPDb
-    - WPWebDriver
     - Asserts
-    - WPCLI
-    #- WPLoader
+    - WPWebDriver
   config:
-    WPCLI:
-      path: /var/www/html/
-      throw: true
-    WPDb:
-      dsn: 'mysql:host=localhost;dbname=wordpress'
-      wait: 5
-      user: wordpressuser
-      password: password
-      dump: tests/_data/dump.sql
-      populate: false
-      #populate: false
-      cleanup: false
-      # sudo mysqldump -ppassword wordpress > /var/www/html/wp-content/plugins/fcfs-block/tests/_data/dump.sql
-      populator: 'mysql -u $user -ppassword -h $host $dbname < $dump'
-      url: 'http://3.14.14.147/'
-      tablePrefix: wp_
     WPWebDriver:
-      url: 'http://3.14.14.147/'
+      url: 'http://3.15.170.112/'
       window_size: 400, 300
       #window_size: maximize
       adminUsername: 'Codeception'
@@ -39,20 +20,4 @@ modules:
       browser: chrome
       capabilities:
         chromeOptions:
-          args:
-            - restore-last-session
-          excludeSwitches: []
-    WPLoader:
-      multisite: false
-      loadOnly: true
-      wpRootFolder: "/var/www/html"
-      dbName: wordpress
-      dbHost: localhost
-      dbUser: wordpressuser
-      dbPassword: password
-      #isolatedInstall: true
-      tablePrefix: wp_
-      domain: "wordrpess.localhost"
-      adminEmail: "admin@wordpress.localhost"
-      plugins: []
-      activatePlugins: []
+            args: ["--headless", "--disable-gpu", "--disable-dev-shm-usage", "--no-sandbox"]

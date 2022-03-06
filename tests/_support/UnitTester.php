@@ -20,9 +20,8 @@ class UnitTester extends \Codeception\Actor
 {
     use _generated\UnitTesterActions;
 
-	public function __construct()
-   {
-       require_once('/var/www/html/wp-content/plugins/fcfs-block/src/FCFS/autoloader.php');
+	public function __construct(){
+       require_once('/var/www/html/wp-content/plugins/email-tunnel/src/EmailTunnel/autoloader.php');
    }
 
 }

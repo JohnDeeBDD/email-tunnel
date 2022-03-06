@@ -42,7 +42,7 @@ class TunnelExit{
 				'callback' => function () {	
 					$userID = get_current_user_id();
 					$TunnelExit = new TunnelExit;
-    				$result = $TunnelExit->getExitDataForFrontened($userID);
+    				$result = $TunnelExit->getExitDataForFrontend($userID);
     				//return "my balls";
     				return $result;
 				},
@@ -66,24 +66,40 @@ class TunnelExit{
             \wp_mail($to, $subject, $message, $headers);
             return "email sent";
     }
-    
-    
-    
-    public function getExitDataForFrontened($userID){
+
+    public function removeExitCred($uRL, $userID){
+        $uRL = "email-tunnel:" . $uRL;
+        $uUID = $this->getApplicationPasswordUUIDByName($uRL, $userID);
+        if($uUID){
+            return (\WP_Application_Passwords::delete_application_password( $userID, $uUID ));
+        }else{
+            return false;
+        }
+    }
+
+    public function getExitDataForFrontend($userID){
     		$AppPasswords = \WP_Application_Passwords::get_user_application_passwords($userID);
     		$result = [];
+    		//var_dump($AppPasswords);die("line 73");
     		foreach($AppPasswords as $item){
 
     			$name = $item['name'];
     			if (substr($name, 0, 13) == "email-tunnel:"){
-    				//echo ($item['name'] . "<br />");
     				$name = $str1 = substr($item['name'], 13);
-    				array_push($result, $name);
+    				$newItem = ['name' => $name, 'createdOn' => "04/04/2022", 'emails' => 555, 'status' => 'hello'];
+    				array_push($result, $newItem);
     			}
     		}
     		return $result;
     }
 
+    public function getApplicationPasswordUUIDByName($name, $userID){
+        $passwords = \WP_Application_Passwords::get_user_application_passwords( $userID );
+        foreach ( $passwords as $password ) {
+            if ( strtolower( $password['name'] ) === strtolower( $name ) ) {
+                return $password['uuid'];
+            }
+        }
+        return false;
+    }
 }
-
-//?to=jiminac@aol.com&subject=subjecto&message=someMessage

@@ -39,7 +39,8 @@ class Connections{
     public function updateConnetion($siteUrl, $siteTitle, $status, $code){}
     
     public function removeConnection(){}
-    
+
+
     public function getSiteStatusHTML(){
         $db = $this->getSiteStatus();
         $status = $db['status'];
@@ -81,46 +82,93 @@ OUTPUT;
 				}
 			)
 		);
-		
-		register_rest_route(
-			"email-tunnel/v1",
-			"set-site-status",
-			array(
-				'methods' => ['POST', 'GET'],
-				'callback' => function () {
-					
-				    $this->setSiteStatus($_REQUEST['siteUrl'], $_REQUEST['siteTitle'], $_REQUEST['status'], $_REQUEST['code']);
-				    $status = ($this->getSiteStatus());
-					return $status;
-				},
-				'permission_callback' => function () {
-				    
-				    //Remove this line to active nonce system:
-				    //return TRUE;
-					
-					if (!(current_user_can("install_plugins"))) {
-						return FALSE;
-					}
-					return TRUE;
-				},
-				'validate_callback' => function () {
-				    if(!isset($_REQUEST['status'])){
-				        return FASLE;
-				    }
-				    if(!isset($_REQUEST['siteUrl'])){
-				        $_REQUEST[''] = "";    
-				    }
-				    if(!isset($_REQUEST['siteTitle'])){
-				        $_REQUEST['siteTitle'] = "";    
-				    }
-				    if(!isset($_REQUEST['code'])){
-				        $_REQUEST['code'] = "";    
-				    }
+
+        register_rest_route(
+            "email-tunnel/v1",
+            "set-site-status",
+            array(
+                'methods' => ['POST', 'GET'],
+                'callback' => function () {
+
+                    $this->setSiteStatus($_REQUEST['siteUrl'], $_REQUEST['siteTitle'], $_REQUEST['status'], $_REQUEST['code']);
+                    $status = ($this->getSiteStatus());
+                    return $status;
+                },
+                'permission_callback' => function () {
+
+                    //Remove this line to active nonce system:
+                    //return TRUE;
+
+                    if (!(current_user_can("install_plugins"))) {
+                        return FALSE;
+                    }
                     return TRUE;
-				}
-			)
-		);
+                },
+                'validate_callback' => function () {
+                    if(!isset($_REQUEST['status'])){
+                        return FALSE;
+                    }
+                    if(!isset($_REQUEST['siteUrl'])){
+                        $_REQUEST[''] = "";
+                    }
+                    if(!isset($_REQUEST['siteTitle'])){
+                        $_REQUEST['siteTitle'] = "";
+                    }
+                    if(!isset($_REQUEST['code'])){
+                        $_REQUEST['code'] = "";
+                    }
+                    return TRUE;
+                }
+            )
+        );
+
+        register_rest_route(
+            "email-tunnel/v1",
+            "collapse-tunnel",
+            array(
+                'methods' => ['POST', 'GET'],
+                'callback' => function () {
+                    if($_REQUEST['status'] == "entrance"){
+                        $Entrance = new TunnelEntrance;
+                        $resp = $Entrance->removeEntranceCred($_REQUEST['siteUrl']);
+                        $resp = $Entrance->getFilteredEntranceCredsForFrontEndUITableData();
+                        return $resp;
+                    }
+                    if($_REQUEST['status'] == "exit"){
+
+                        $userID = get_current_user_id();
+                        //return "SERVER RESPONSE ALPHA" . $userID . $_REQUEST['siteUrl'];
+                        $Exit = new TunnelExit;
+                        $res = $Exit->removeExitCred($_REQUEST['siteUrl'], $userID);
+                        $res = $Exit->getExitDataForFrontend($userID);
+                        return $res;
+                    }
+                    return "SOMETHING IS WRONG";
+                },
+                'permission_callback' => function () {
+
+                    //Remove this line to active nonce system:
+                    //return TRUE;
+
+                    if (!(current_user_can("install_plugins"))) {
+                        return FALSE;
+                    }
+                    return TRUE;
+                },
+                'validate_callback' => function () {
+                    if(!isset($_REQUEST['status'])){
+                        return FALSE;
+                    }
+                    if(!isset($_REQUEST['siteUrl'])){
+                        return FALSE;
+                    }
+                    return TRUE;
+                }
+            )
+        );
 	}
+
+
     
     
 

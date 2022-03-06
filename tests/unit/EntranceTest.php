@@ -104,8 +104,9 @@ class EntranceTest extends \Codeception\TestCase\WPTestCase{
                 //should be the same minus the "code" part
                 $expectedReturn = 
                       [ 
-                        ['url' => 'https://somesite.com', 'status' => 'not connected' ],
-                        ['url' => 'https://some-other-site.com', 'status' => 'connected' ] 
+                        ['url' => 'https://somesite.com', 'status' => 'not connected', 'created' => '04/05/2022', 'emails' => 666, 'revoke' => 'https://somesite.com' ],
+                        ['url' => 'https://some-other-site.com', 'status' => 'connected', 'created' => '04/05/2022', 'emails' => 666, 'revoke' => 'https://some-other-site.com' ],
+                        ['url' => 'https://some-third-site.com', 'status' => 'not connected', 'created' => '04/05/2022', 'emails' => 666, 'revoke' => 'https://some-third-site.com' ],
                       ];
                       
                 $Entrance = new \EmailTunnel\TunnelEntrance();
@@ -114,14 +115,42 @@ class EntranceTest extends \Codeception\TestCase\WPTestCase{
                 $this->assertEquals($expectedReturn, $actual);
                 
         }
+
+    /**
+     * @test
+     * removeEntranceCred() test
+     */
+        public function removeEntranceCredTest(){
+            //Given there are some entrances in the database:
+            $data = $this->getMockDummyEntranceData();
+            update_option('email_tunnel_entrance_creds', $data);
+
+            //When a particular site is removed:
+            $Entrance = new \EmailTunnel\TunnelEntrance();
+            $siteToRemove = "https://some-other-site.com";
+            $functionResult = $Entrance->removeEntranceCred($siteToRemove);
+
+            //Then the site should no longer be in the result
+            $expectedResult =
+                [
+                    ['url' => 'https://some-third-site.com', 'code' => '333', 'status' => 'not connected' ],
+                    ['url' => 'https://somesite.com', 'code' => '111', 'status' => 'not connected' ],
+
+                ];
+            $this->assertEqualsCanonicalizing($expectedResult, $functionResult);
+
+            //And the entry for the site should no longer be in the database:
+            $optionFromDB = get_option('email_tunnel_entrance_creds');
+            $this->assertEqualsCanonicalizing($expectedResult, $optionFromDB);
+        }
         
         private function getMockDummyEntranceData(){
                 $mockData =
-                        [ 
-                                ['url' => 'https://somesite.com', 'code' => '123456', 'status' => 'not connected' ],
-                                ['url' => 'https://some-other-site.com', 'code' => '0987654', 'status' => 'connected' ] 
+                        [
+                            ['url' => 'https://somesite.com', 'code' => '111', 'status' => 'not connected' ],
+                            ['url' => 'https://some-other-site.com', 'code' => '222', 'status' => 'connected' ],
+                            ['url' => 'https://some-third-site.com', 'code' => '333', 'status' => 'not connected' ],
                         ];
-        
                 return $mockData;
         }
 }

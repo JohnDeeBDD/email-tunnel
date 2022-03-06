@@ -9,6 +9,17 @@ class Acceptance extends \Codeception\Module{
 
     public function _afterSuite(){
         //Cleanup:
-        shell_exec("wp post delete $(wp post list --format=ids) --force");
+        //shell_exec("wp post delete $(wp post list --format=ids) --force");
+    }
+
+    public function _beforeSuite($settings = []){
+    }
+
+    public function pauseInTerminal(){
+        echo "Press ENTER to continue: ";
+        $handle = fopen ("php://stdin","r");
+        $line = fgets($handle);
+        fclose($handle);
+        echo "\n";
     }
 }

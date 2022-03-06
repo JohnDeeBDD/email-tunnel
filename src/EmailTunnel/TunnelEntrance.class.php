@@ -3,6 +3,22 @@
 namespace EmailTunnel;
 
 class TunnelEntrance{
+
+    public function removeEntranceCred($uRL){
+        $creds = get_option('email_tunnel_entrance_creds');
+        if(!(is_array($creds))){
+            $creds = [];
+            return true;
+        }
+        $newCreds = [];
+        foreach($creds as $cred){
+            if(!($cred['url'] === $uRL)){
+               array_push($newCreds, $cred);
+            }
+        }
+        update_option('email_tunnel_entrance_creds', $newCreds);
+        return $newCreds;
+    }
     
     public function interceptOutgoingEmail($to, $subject, $message, $headers){
         //The url you wish to send the POST request to
@@ -72,7 +88,10 @@ class TunnelEntrance{
             $item = 
                 [
                     'url'       => $credItem['url'],
+                    'created' => "04/05/2022",
+                    'emails'    =>  666,
                     'status'    => $credItem['status'],
+                    'revoke'    => $credItem['url']
                 ];
             array_push($creds, $item);
         }
@@ -84,7 +103,7 @@ class TunnelEntrance{
         if(!(is_array($creds))){
             $creds = [];
         }
-        //var_dump($creds);die();
+        //var_dump($creds);die(" line 106");
         return $creds;
     }
     
@@ -120,14 +139,7 @@ class TunnelEntrance{
         update_option('email_tunnel_entrance_creds', $newCreds);
         return $found;
     }
-    
 
-    
-    private function connectEntranceToExit($credentials){
-    
-    }
-    
-        
     public function register_API_Routes(){
         //die("line 132");
 		register_rest_route(
@@ -198,13 +210,13 @@ class TunnelEntrance{
         $args['addExitUrl'] = sanitize_text_field($args['addExitUrl']); 
         if (!(filter_var($args['addExitUrl'], FILTER_VALIDATE_URL))) {
             http_response_code(406);
+            //var_dump($args['addExitUrl']);die("!!!!!!");
             return ("URL is not good");
         }
         $prefix = substr($args['addExitUrl'], 0, 8);
         if (!($prefix == "https://")){
             return ("Must be HTTPS");
         }
-        
         return true;
     }
 

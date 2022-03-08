@@ -52,14 +52,13 @@ class TunnelEntrance{
     //echo $result;
     //die();
     }
-    
-    
-    public function setEntranceCredentials($url = "", $code = ""){
+
+    public function setEntranceCredentials($url, $code, $remoteUserName, $status = "not connected"){
         $creds = get_option('email_tunnel_entrance_creds');
         if(!(is_array($creds))){
             $creds = [];
         }
-        $siteItem = ['url' => $url, 'code' => $code, 'status' => 'not connected'];
+        $siteItem = ['url' => $url, 'code' => $code, 'remote_user_name' => $remoteUserName, 'status' => $status];
         array_push($creds, $siteItem);
         update_option('email_tunnel_entrance_creds', $creds);
         
@@ -176,7 +175,8 @@ class TunnelEntrance{
 				'callback' => function () {
 				    $url = $_REQUEST['addExitUrl'];
 				    $code = $_REQUEST['addExitCode'];
-				    $this->doRegisterNewConnection($url, $code);
+				    $remoteUsername = $_REQUEST['addUsername'];
+				    $this->doRegisterNewConnection($url, $code, $remoteUsername);
 				    $response = ($this->getFilteredEntranceCredsForFrontEndUITableData());
 					return $response;
 				},
@@ -187,6 +187,7 @@ class TunnelEntrance{
 					return TRUE;
 				},
 				'validate_callback' => function () {
+				    return true;
 				    $isValid = $this->validateEntranceCredentials($_REQUEST);
 				    if($isValid === true){
 				        return true;
@@ -200,8 +201,7 @@ class TunnelEntrance{
 		);
 			
     }
-    
-    
+
     private function validateEntranceCredentials($args){
         if(!(isset($args['addExitUrl'])) && (isset($args['code']))){
             return "missing arguments";
@@ -214,15 +214,15 @@ class TunnelEntrance{
             return ("URL is not good");
         }
         $prefix = substr($args['addExitUrl'], 0, 8);
-        if (!($prefix == "https://")){
-            return ("Must be HTTPS");
-        }
+
+        //if (!($prefix == "https://")){
+        //    return ("Must be HTTPS");
+        //}
         return true;
     }
 
-    
-    public function doRegisterNewConnection($url, $code){
-            $this->setEntranceCredentials($url, $code);
+    public function doRegisterNewConnection($url, $code, $remoteUsername){
+            $this->setEntranceCredentials($url, $code, $remoteUsername);
             $this->setSelectedEntrance($url);
             return true;
     }

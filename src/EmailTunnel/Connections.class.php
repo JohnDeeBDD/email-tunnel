@@ -5,19 +5,51 @@ namespace EmailTunnel;
 //this class provides a CRUD for the connections data
 
 class Connections{
-    
-    public function getRemoteUrl(){}
-    
-    public function getRemoteCode(){}
-    
-    public function setSiteStatus($siteUrl, $siteTitle, $status, $code){
-        $status = 
-            [
-                'siteUrl'   => $siteUrl,
-                'siteTitle' => $siteTitle,
-                'status'    => $status,
-                'code'      => $code
-            ];
+
+    public function setSiteStatus($siteUrl = "", $userId, $status = "Not Connected", $code = ""){
+        
+        /*
+        if($status == "Not Connected"){
+            $status =
+                [
+                    'siteUrl'   => '',
+                    'userId'    => '',
+                    'status'    => $status,
+                    'code'      => ''
+                ];
+        }
+
+        if($status == "entrance"){
+            $Entrance = new TunnelEntrance();
+            $siteUrl = $Entrance->getSelectedEntrance();
+            if($siteUrl){
+                $status =
+                    [
+                        'siteUrl'   => $siteUrl,
+                        'userId'    => $userId,
+                        'status'    => "entrance",
+                        //'code'      => $code
+                    ];
+            }else{
+
+            }
+            $status =
+                [
+                    'siteUrl'   => $siteUrl,
+                    'userId'    => $userId,
+                    'status'    => $status,
+                    'code'      => $code
+                ];
+        }
+        */
+        $status =
+                [
+                    'siteUrl'   => '',
+                    'userId'    => '',
+                    'status'    => "entrance",
+                    'code'      => ''
+                ];
+        
         update_option('email_tunnel_site_status', $status);
     }
     
@@ -27,20 +59,27 @@ class Connections{
             $status = 
             [
                 'siteUrl'   => "",
-                'siteTitle' => "",
+                'userId'    => "",
                 'status'    => "Not Connected",
                 'code'      => ""
             ];  
         }
         
+        
+        $status =
+                [
+                    'siteUrl'   => '',
+                    'userId'    => '',
+                    'status'    => "entrance",
+                    'code'      => ''
+                ];
+        
         return $status;
     }
     
-    public function updateConnetion($siteUrl, $siteTitle, $status, $code){}
-    
-    public function removeConnection(){}
+    //public function updateConnetion($siteUrl, $siteTitle, $status, $code){}
 
-
+    /*
     public function getSiteStatusHTML(){
         $db = $this->getSiteStatus();
         $status = $db['status'];
@@ -56,6 +95,7 @@ OUTPUT;
         
         return $output;
     }
+    */
     
     public function register_API_Routes(){
 		register_rest_route(
@@ -167,10 +207,6 @@ OUTPUT;
             )
         );
 	}
-
-
-    
-    
 
 }
 

@@ -5,21 +5,21 @@
  * Description: 
  * Donate Link: 
  * Author: 
- * Version: 0.1
+ * Version: 2
  * Author URI: 
  * Text Domain: email-tunnel
  */
-//hello asia
 
-//die("tunnel");
+
+//die("email-tunnel");
+
 global $devSite2;
 //$devSite2 = "http://18.219.237.210";
 
 require_once (plugin_dir_path(__FILE__). 'src/EmailTunnel/autoloader.php');
 
 //update_option( 'email_tunnel_exit_url_base', 'MUST BE LOCALLY SET');
-
-
+//add_filter( 'wp_is_application_passwords_available', '__return_true' );
 $tunnelStatus = get_option('email_tunnel', true);
 
 
@@ -29,10 +29,10 @@ if($tunnelStatus == "entrance"){
   }
 }
 
-//if($tunnelStatus == "exit"){
+if($tunnelStatus == "exit"){
  $Exit = new EmailTunnel\TunnelExit;
  $Exit->openTunnelExit();
-//}
+}
 
 
 

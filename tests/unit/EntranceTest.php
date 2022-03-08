@@ -58,15 +58,21 @@ class EntranceTest extends \Codeception\TestCase\WPTestCase{
 	 
 	 /**
 	  * @test
-	  * it should return the connected site url
+	  * getSelectedEntrance() test
 	  */
 	 public function itShouldReturnTheConnectedSiteUrl(){
-	        $Entrance = new \EmailTunnel\TunnelEntrance();
-                $url = "https://somesite.com";
-                $code = "123456";
-                $Entrance->setEntranceCredentials($url, $code);
-                $url = "https://some-other-site.com";
-                $code = "0987654";
+	     //Given there is an entrance cred
+         //And that the entrance cred is selected
+         //When getSelectedEntrance() is called
+         //Then the selected site's url, code, and remote user-name should be returned
+         $Entrance = new \EmailTunnel\TunnelEntrance();
+         $url = "https://somesite.com";
+         $code = "123456";
+         $remoteUsername = "BobTheUser";
+
+         $Entrance->setEntranceCredentials($url, $code);
+         $url = "https://some-other-site.com";
+          $code = "0987654";
                 $Entrance->setEntranceCredentials($url, $code);  
                
                 $Entrance->setSelectedEntrance($url);

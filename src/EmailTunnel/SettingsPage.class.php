@@ -24,12 +24,17 @@ class SettingsPage{
         $i18nSomeSite = __("i.e. https://somesite.com");
         $i18nLocalStatus = __("Local Status");
         $i18nName = __("Name");
+        $i18nRemoteUsername = __("Remote User Name");
         $i18nRevoke = __("Revoke");
         $i18nnbspSomeSite = __("&nbsp;&nbsp;https://somesite.com");
         $i18nObtainOnOtherWebsite = __("obtain on other website");
         $i18nTheTunnelIsClosed = __("tunnel is closed.");
         $i18nYouAreNotConnected = __("You are not connected.");
         $i18nYouMustHaveSSL = __("You must have SSL enabled on both sites in the free version of this plugin. The URL should look like:");
+
+        $Connections = new \EmailTunnel\Connections;
+        $status = $Connections->getSiteStatus();
+        $status = var_export($status);
 
         $output = <<<OUTPUT
 <style>
@@ -87,6 +92,16 @@ class SettingsPage{
             <input type = "text" placeholder = "$i18nSomeSite" name = "email-tunnel-exit-url-input" id = "email-tunnel-exit-url-input" />
         </td>
     </tr>
+    
+    
+    <tr class = "entrance-area-row">
+        <th>
+            $i18nRemoteUsername
+        </th>
+        <td>
+            <input type = "text" placeholder = "$i18nObtainOnOtherWebsite" id = "email-tunnel-exit-username-input" name = "email-tunnel-exit-username-input" />
+        </td>
+    </tr>
     <tr class = "entrance-area-row">
         <th>
             $i18nConnectionCode
@@ -94,6 +109,7 @@ class SettingsPage{
         <td>
             <input type = "text" placeholder = "$i18nObtainOnOtherWebsite" id = "email-tunnel-exit-code-input" name = "email-tunnel-exit-code-input" />
         </td>
+    </tr>
         
     <tr class = "entrance-area-row">
         <th></th>
@@ -101,7 +117,7 @@ class SettingsPage{
             <input type = "button" class = "button delete" value = "$i18nConnect" id = "email-tunnel-connect-entrance-item-submit-button" name = "email-tunnel-connect-entrance-item-submit-button" />
         </td>
     </tr>
-    </tr>
+    
     <tr id = "email-tunnel-entrance-connect-button-error" class = "email-tunnel-error-row">
         <th></th>
         <td>

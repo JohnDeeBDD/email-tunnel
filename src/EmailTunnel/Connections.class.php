@@ -2,124 +2,43 @@
 
 namespace EmailTunnel;
 
-//this class provides a CRUD for the connections data
-
 class Connections{
 
-    public function setSiteStatus($siteUrl = "", $userId, $status = "Not Connected", $code = ""){
-        
-        /*
-        if($status == "Not Connected"){
-            $status =
-                [
-                    'siteUrl'   => '',
-                    'userId'    => '',
-                    'status'    => $status,
-                    'code'      => ''
-                ];
-        }
+    public static function setSiteStatus($status = "not connected"){
 
-        if($status == "entrance"){
-            $Entrance = new TunnelEntrance();
-            $siteUrl = $Entrance->getSelectedEntrance();
-            if($siteUrl){
-                $status =
-                    [
-                        'siteUrl'   => $siteUrl,
-                        'userId'    => $userId,
-                        'status'    => "entrance",
-                        //'code'      => $code
-                    ];
-            }else{
-
-            }
-            $status =
-                [
-                    'siteUrl'   => $siteUrl,
-                    'userId'    => $userId,
-                    'status'    => $status,
-                    'code'      => $code
-                ];
+        if($status == "not connected"){
+            delete_option( "email_tunnel_site_status");
+            return $status;
         }
-        */
-        $status =
-                [
-                    'siteUrl'   => '',
-                    'userId'    => '',
-                    'status'    => "entrance",
-                    'code'      => ''
-                ];
-        
         update_option('email_tunnel_site_status', $status);
-    }
-    
-    public function getSiteStatus(){
-        $status = get_option('email_tunnel_site_status');
-        if(!$status){
-            $status = 
-            [
-                'siteUrl'   => "",
-                'userId'    => "",
-                'status'    => "Not Connected",
-                'code'      => ""
-            ];  
-        }
-        
-        
-        $status =
-                [
-                    'siteUrl'   => '',
-                    'userId'    => '',
-                    'status'    => "entrance",
-                    'code'      => ''
-                ];
-        
         return $status;
     }
     
-    //public function updateConnetion($siteUrl, $siteTitle, $status, $code){}
-
-    /*
-    public function getSiteStatusHTML(){
-        $db = $this->getSiteStatus();
-        $status = $db['status'];
-        $siteUrl = $db['siteUrl'];
-        $siteTitle = $db['siteTitle'];
-        $output =
-<<<OUTPUT
-$status<br />
-Emails from this site, will be sent from $siteTitle. <br />
-URL: $siteUrl<br />
-
-OUTPUT;
-        
-        return $output;
+    public static function getSiteStatus(){
+        $status = get_option('email_tunnel_site_status');
+        if(!$status){
+            return "not connected";
+        }
+        return $status;
     }
-    */
-    
-    public function register_API_Routes(){
+
+    public static function register_API_Routes(){
+
 		register_rest_route(
 			"email-tunnel/v1",
 			"get-site-status",
 			array(
 				'methods' => ['POST', 'GET'],
 				'callback' => function () {
-				    $status = ($this->getSiteStatus());
-					return $status;
+					return Connections::getSiteStatus();
 				},
 				'permission_callback' => function () {
-				    
-				    //Remove this line to active nonce system:
-				    //return TRUE;
-					
 					if (!(current_user_can("install_plugins"))) {
 						return FALSE;
 					}
 					return TRUE;
 				},
-				'validate_callback' => function () {
-                    return TRUE;
-				}
+				'validate_callback' => function(){return TRUE;}
 			)
 		);
 
@@ -127,18 +46,12 @@ OUTPUT;
             "email-tunnel/v1",
             "set-site-status",
             array(
-                'methods' => ['POST', 'GET'],
+                'methods' => ['POST'],
                 'callback' => function () {
-
-                    $this->setSiteStatus($_REQUEST['siteUrl'], $_REQUEST['siteTitle'], $_REQUEST['status'], $_REQUEST['code']);
-                    $status = ($this->getSiteStatus());
-                    return $status;
+                    return Connections::setSiteStatus($_REQUEST['status']);
                 },
                 'permission_callback' => function () {
-
-                    //Remove this line to active nonce system:
                     //return TRUE;
-
                     if (!(current_user_can("install_plugins"))) {
                         return FALSE;
                     }
@@ -147,15 +60,6 @@ OUTPUT;
                 'validate_callback' => function () {
                     if(!isset($_REQUEST['status'])){
                         return FALSE;
-                    }
-                    if(!isset($_REQUEST['siteUrl'])){
-                        $_REQUEST[''] = "";
-                    }
-                    if(!isset($_REQUEST['siteTitle'])){
-                        $_REQUEST['siteTitle'] = "";
-                    }
-                    if(!isset($_REQUEST['code'])){
-                        $_REQUEST['code'] = "";
                     }
                     return TRUE;
                 }
@@ -206,7 +110,7 @@ OUTPUT;
                 }
             )
         );
-	}
 
+	}
 }
 

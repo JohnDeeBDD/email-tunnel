@@ -52,6 +52,8 @@ class TunnelEntrance{
     //echo $result;
     //die();
     }
+    // XKGovVUtU5S6HuplWfOccRYM
+    // email-tunnel:https://asia.dev
 
     public function setEntranceCredentials($url, $code, $remoteUserName, $status = "not connected"){
         $creds = get_option('email_tunnel_entrance_creds');
@@ -64,8 +66,7 @@ class TunnelEntrance{
         
     }
     
-    public function getSelectedEntrance(){
-        //$response = false;
+    public static function getSelectedEntrance(){
         $creds = get_option('email_tunnel_entrance_creds');
         if(!(is_array($creds))){
             return false;
@@ -105,7 +106,7 @@ class TunnelEntrance{
         //var_dump($creds);die(" line 106");
         return $creds;
     }
-    
+
     public function setSelectedEntrance($url){
         $creds = get_option('email_tunnel_entrance_creds');
         if(!(is_array($creds))){
@@ -176,9 +177,15 @@ class TunnelEntrance{
 				    $url = $_REQUEST['addExitUrl'];
 				    $code = $_REQUEST['addExitCode'];
 				    $remoteUsername = $_REQUEST['addUsername'];
-				    $this->doRegisterNewConnection($url, $code, $remoteUsername);
-				    $response = ($this->getFilteredEntranceCredsForFrontEndUITableData());
-					return $response;
+				    if($this->doRegisterNewConnection($url, $code, $remoteUsername)){
+                        $response = ($this->getFilteredEntranceCredsForFrontEndUITableData());
+                        return $response;
+                    }else{
+                        http_response_code(401);
+                        echo("A connection error occured.");
+                        exit;
+                    }
+
 				},
 				'permission_callback' => function () {
 					if (!(current_user_can("install_plugins"))) {
@@ -221,9 +228,16 @@ class TunnelEntrance{
         return true;
     }
 
+    public function doCheckCredsViaCurl($url, $code, $remoteUsername){
+        return true;
+    }
+
     public function doRegisterNewConnection($url, $code, $remoteUsername){
+        if($this->doCheckCredsViaCurl($url, $code, $remoteUsername)){
             $this->setEntranceCredentials($url, $code, $remoteUsername);
             $this->setSelectedEntrance($url);
             return true;
+        }
+        return false;
     }
 } 

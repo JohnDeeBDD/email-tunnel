@@ -33,8 +33,6 @@ class SettingsPage{
         $i18nYouMustHaveSSL = __("You must have SSL enabled on both sites in the free version of this plugin. The URL should look like:");
 
         $Connections = new \EmailTunnel\Connections;
-        $status = $Connections->getSiteStatus();
-        $status = var_export($status);
 
         $output = <<<OUTPUT
 <style>
@@ -89,7 +87,7 @@ class SettingsPage{
             $i18nExitSiteURL
         </th>
         <td>
-            <input type = "text" placeholder = "$i18nSomeSite" name = "email-tunnel-exit-url-input" id = "email-tunnel-exit-url-input" />
+            <input type = "text" placeholder = "$i18nSomeSite" name = "email-tunnel-exit-url-input" id = "email-tunnel-exit-url-input" class = "email-tunnel-text-input" />
         </td>
     </tr>
     
@@ -99,7 +97,7 @@ class SettingsPage{
             $i18nRemoteUsername
         </th>
         <td>
-            <input type = "text" placeholder = "$i18nObtainOnOtherWebsite" id = "email-tunnel-exit-username-input" name = "email-tunnel-exit-username-input" />
+            <input type = "text" placeholder = "$i18nObtainOnOtherWebsite" id = "email-tunnel-exit-username-input" name = "email-tunnel-exit-username-input" class = "email-tunnel-text-input"/>
         </td>
     </tr>
     <tr class = "entrance-area-row">
@@ -107,7 +105,7 @@ class SettingsPage{
             $i18nConnectionCode
         </th>
         <td>
-            <input type = "text" placeholder = "$i18nObtainOnOtherWebsite" id = "email-tunnel-exit-code-input" name = "email-tunnel-exit-code-input" />
+            <input type = "text" placeholder = "$i18nObtainOnOtherWebsite" id = "email-tunnel-exit-code-input" name = "email-tunnel-exit-code-input" class = "email-tunnel-text-input" />
         </td>
     </tr>
         

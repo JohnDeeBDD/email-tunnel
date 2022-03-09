@@ -6,7 +6,7 @@
 
 jQuery( document ).ready(function() {
     console.log("email-tunnel settingsPage.js loaded.");
-    console.log("EmailTunnelStatusData:");
+    console.log("status data emitted from PHP: ");
     console.log(EmailTunnelStatusData);
 
     switch (EmailTunnelStatusData.status) {
@@ -35,6 +35,10 @@ jQuery( document ).ready(function() {
         EmailTunnel.doClickEntranceConnectButton();
     });
 
+    //EmailTunnel.doClearVisualErrors();
+    jQuery(".email-tunnel-text-input").focus(function(){
+        EmailTunnel.doClearVisualErrors();
+    });
 });
 
 //"EmailTunnel" is the namespace for our javascript stuff:
@@ -51,8 +55,8 @@ EmailTunnel.blankOutTable = function(){
     }
 }
 
-EmailTunnel.clearVisualErrors = function(){
-    console.log("clearVisualErrors()");
+EmailTunnel.doClearVisualErrors = function(){
+    console.log("doClearVisualErrors()");
     jQuery("#email-tunnel-error-must-be-ssl").hide();
     jQuery("#email-tunnel-entrance-connect-button-error").hide();
     jQuery("#email-tunnel-exit-url-input").css("background-color", "#fff"); 
@@ -63,7 +67,7 @@ EmailTunnel.clearVisualErrors = function(){
 EmailTunnel.doAjaxAndRenderEntranceDataDiv = function(){
     console.log("doAjaxAndRenderEntranceDataDiv()");
     //debugger;
-    EmailTunnel.clearVisualErrors();
+    EmailTunnel.doClearVisualErrors();
     jQuery.ajax({
         url: "/wp-json/email-tunnel/v1/get-entrence-creds",
         data: {'_wpnonce': wpApiSettings.nonce},
@@ -180,6 +184,11 @@ EmailTunnel.doAjaxPostEntranceCredToServer = function(){
 	    	    console.log(data);
                 EmailTunnel.renderEntranceDivWithData(data);
                 EmailTunnel.renderEntranceConnectButton_ReadyState();
+
+                //clear input boxes:
+                jQuery("input[type=text][name=email-tunnel-exit-url-input]").val("");
+                jQuery("input[type=text][name=email-tunnel-exit-code-input]").val("");
+                jQuery("input[type=text][name=email-tunnel-exit-username-input]").val("");
 		    },
 		    error: function (errorThrown) {
     		    console.log("ERROR doAjaxPostEntranceCredToServer");
@@ -192,9 +201,9 @@ EmailTunnel.doAjaxPostEntranceCredToServer = function(){
 }
 
 EmailTunnel.doAjaxSetSiteStatus = function (EmailTunnelStatusData){
-    //console.log("doAjaxSetSiteStatus(EmailTunnelStatusData)");
+    console.log("doAjaxSetSiteStatus(EmailTunnelStatusData)");
     EmailTunnelStatusData._wpnonce = wpApiSettings.nonce;
-    //console.log(EmailTunnelStatusData);
+    console.log(EmailTunnelStatusData);
     jQuery.ajax({
         url: "/wp-json/email-tunnel/v1/set-site-status/",
         data: EmailTunnelStatusData,
@@ -202,7 +211,7 @@ EmailTunnel.doAjaxSetSiteStatus = function (EmailTunnelStatusData){
         success: function (data) {
             //console.log( "success: doAjaxSetSiteStatus()");
             //console.log("server response:");
-            //console.log(data);
+            console.log(data);
         },
         error: function (errorThrown) {
             console.log("Error: " + "EmailTunnel.doAjaxSetSiteStatus()");
@@ -212,8 +221,33 @@ EmailTunnel.doAjaxSetSiteStatus = function (EmailTunnelStatusData){
 
 }
 
+EmailTunnel.ajaxGetSiteStatus = function (){
+    console.log("ajaxGetSiteStatus");
+    EmailTunnelStatusData._wpnonce = wpApiSettings.nonce;
+    console.log(EmailTunnelStatusData);
+    jQuery.ajax({
+        url: "/wp-json/email-tunnel/v1/set-site-status/",
+        data: EmailTunnelStatusData,
+        method: 'POST',
+        success: function (data) {
+            console.log( "success: doAjaxSetSiteStatus()");
+            console.log("server response:");
+            console.log(data);
+        },
+        error: function (errorThrown) {
+            console.log("Error: " + "EmailTunnel.doAjaxSetSiteStatus()");
+            console.log( errorThrown );
+        }
+    });
+
+}
+
+
+
+
 EmailTunnel.doClickEntranceConnectButton = function(){
-    EmailTunnel.clearVisualErrors();
+    console.log("doClickEntranceConnectButton");
+    EmailTunnel.doClearVisualErrors();
     EmailTunnel.renderEntranceConnectButton_WorkingState();
     if(EmailTunnel.validateEntranceCred()){
         EmailTunnel.doAjaxPostEntranceCredToServer();
@@ -223,31 +257,32 @@ EmailTunnel.doClickEntranceConnectButton = function(){
 }
 
 EmailTunnel.validateEntranceCred = function(){
-    var isSubmissionValid = true;
     console.log("validateEntranceCred()");
     //Development:
     if(!(EmailTunnel.isFrontEndValidationActive())){
         //we'll skip validation here in this case
         return true;
     }
+    var isSubmissionValid = true;
     let exitUrl = jQuery("#email-tunnel-exit-url-input").val();
     let exitCode = jQuery("#email-tunnel-exit-code-input").val();
     let userName = jQuery("#email-tunnel-exit-username-input").val();
-    
-    if( exitUrl == ""){ jQuery("#email-tunnel-exit-url-input").css("background-color", "#ffdddd"); }
-    if( exitCode == ""){ jQuery("#email-tunnel-exit-code-input").css("background-color", "#ffdddd"); }
-    if( userName == ""){ jQuery("#email-tunnel-exit-username-input").css("background-color", "#ffdddd"); }
-  
-    
-    //if empty
-    
 
-    //if ssl
-    
-    console.log(exitUrl);
-    console.log(exitCode);
-    console.log(userName);
-
+    if( exitUrl == ""){
+        jQuery("#email-tunnel-exit-url-input").css("background-color", "#ffdddd");
+        isSubmissionValid = false;
+    }
+    if( exitCode == ""){
+        jQuery("#email-tunnel-exit-code-input").css("background-color", "#ffdddd");
+        isSubmissionValid = false;
+    }
+    if( userName == ""){
+        jQuery("#email-tunnel-exit-username-input").css("background-color", "#ffdddd");
+        isSubmissionValid = false;
+    }
+    console.log("exitUrl = " + exitUrl);
+    console.log("exitCode = " + exitCode);
+    console.log("userName = " + userName);
     return isSubmissionValid;
 }
 
@@ -259,15 +294,7 @@ EmailTunnel.isFrontEndValidationActive = function(){
 EmailTunnel.isValidHttpUrl = function(string){
     console.log("EmailTunnel.isValidHttpUrl()");
     return true;
-    
-        console.log("doing validateEntranceCred()");
-    let url = jQuery("#email-tunnel-exit-url-input").val();
-    let prefix = url.substr(0, 8);
-    if (!( prefix == "https://")){
-        console.log("isEntranceCredValid() => false");
-        jQuery("#email-tunnel-error-must-be-ssl").show();
-        return false;
-    }
+    //TODO
 }
 
 EmailTunnel.renderEntranceConnectButton_WorkingState = function(){

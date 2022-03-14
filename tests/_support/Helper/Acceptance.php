@@ -1,6 +1,13 @@
 <?php
 namespace Helper;
 
+global $testSiteURLs;
+$testSiteURLs =
+    [
+        'http://13.59.206.189',
+        'http://18.222.202.108'
+    ];
+
 class Acceptance extends \Codeception\Module{
     public function reconfigureThisVariable($array){
         $this->getModule('WPWebDriver')->_reconfigure($array);

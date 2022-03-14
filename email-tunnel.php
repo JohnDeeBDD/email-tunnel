@@ -15,11 +15,15 @@
 
 require_once (plugin_dir_path(__FILE__). 'src/EmailTunnel/autoloader.php');
 
-$tunnelStatus = \EmailTunnel\Connections::getSiteStatus();
 
+
+$tunnelStatus = \EmailTunnel\Connections::getSiteStatus();
+//var_dump($tunnelStatus);die();
 if($tunnelStatus == "entrance"){
-    if(\EmailTunnel\TunnelEntrance::getSelectedEntrance()){
+    $selectedEntrance = \EmailTunnel\TunnelEntrance::getSelectedEntrance();
+    if($selectedEntrance){
         if ( !function_exists('wp_mail')){
+            //die("line 23");
             require_once (plugin_dir_path(__FILE__). 'src/EmailTunnel/wp_mail.func.php');
         }
     }
@@ -68,7 +72,7 @@ function enableAdminJS(){
         }
     }
 }
-
+add_action ('rest_api_init', [new EmailTunnel\TunnelExit, 'doRegisterRoutes']);
 add_action ('rest_api_init', '\EmailTunnel\Connections::register_API_Routes');
 add_action ('rest_api_init', [new \EmailTunnel\TunnelEntrance, 'register_API_Routes']);
 

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="AWS" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" serverName="ET" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="AWS">
+      <paths name="1AWS">
         <serverdata>
           <mappings>
-            <mapping deploy="/var/www/html/wp-content/plugins/fcfs-block" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/var/www/html" local="$PROJECT_DIR$/../../.." web="/" />
+            <mapping deploy="/var/www/html/wp-content/plugins/email-tunnel" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="2AWS">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/var/www/html" local="$PROJECT_DIR$/../../.." web="/" />
+            <mapping deploy="/var/www/html/wp-content/plugins/email-tunnel" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

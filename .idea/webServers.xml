@@ -2,13 +2,29 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="e5804858-1646-4237-b990-20f0b619ad1d" name="AWS">
-        <fileTransfer accessType="SFTP" host="18.220.47.185" port="22" sshConfigId="934747b0-478c-4436-b666-46317462279b" sshConfig="ubuntu@18.220.47.185:22 key" keyPair="true">
+      <webServer id="be75f16e-2cea-4031-bf6b-18a8e9c4af1c" name="2AWS">
+        <fileTransfer accessType="SFTP" host="18.222.202.108" port="22" sshConfigId="f1c98589-959b-4e6a-a76f-0b00307a95a4" sshConfig="ubuntu@18.222.202.108:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="7b475b90-1b35-41d8-9db5-3b8197b09361" name="1AWS">
+        <fileTransfer accessType="SFTP" host="13.59.206.189" port="22" sshConfigId="934747b0-478c-4436-b666-46317462279b" sshConfig="ubuntu@13.59.206.189:22 key" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
         </fileTransfer>
       </webServer>
     </option>
+    <groups>
+      <group>
+        <name>ET</name>
+        <servers>
+          <name value="2AWS" />
+          <name value="1AWS" />
+        </servers>
+      </group>
+    </groups>
   </component>
 </project>

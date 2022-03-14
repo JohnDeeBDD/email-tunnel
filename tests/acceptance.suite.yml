@@ -6,7 +6,8 @@ modules:
     - WPWebDriver
   config:
     WPWebDriver:
-      url: 'http://localhost/'
+      url: 'http://13.59.206.189'
+      url2: 'asdf'
       window_size: 400, 300
       #window_size: maximize
       adminUsername: 'Codeception'

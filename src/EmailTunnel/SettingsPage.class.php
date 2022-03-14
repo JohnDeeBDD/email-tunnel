@@ -7,6 +7,7 @@ class SettingsPage{
     public function render(){
 
         //Internationalization and localization strings:
+        $i18nAction = __("Action");
         $i18nAnErrorHasOccured = __("An unknown error has occured.");
         $i18nClosed = __("Closed");
         $i18nConnect = __("Connect");
@@ -25,7 +26,7 @@ class SettingsPage{
         $i18nLocalStatus = __("Local Status");
         $i18nName = __("Name");
         $i18nRemoteUsername = __("Remote User Name");
-        $i18nRevoke = __("Revoke");
+        //$i18nRevoke = __("Revoke");
         $i18nnbspSomeSite = __("&nbsp;&nbsp;https://somesite.com");
         $i18nObtainOnOtherWebsite = __("obtain on other website");
         $i18nTheTunnelIsClosed = __("tunnel is closed.");
@@ -45,7 +46,8 @@ class SettingsPage{
     #email-tunnel-connection-table{display: none;}
     .entrance-site-url-row{display: none;}
     .spinner{display:none;}
-    
+    #received-connection-code-row{display: none;}
+    #exit-code-from-server{color:red;}
 </style>
 <div class="wrap">
 <h1>
@@ -149,13 +151,16 @@ class SettingsPage{
         <th>$i18nEntranceSiteURL</th>
         <td>
             <input type = "text" name = "email-tunnel-entrance-url" id = "email-tunnel-entrance-url" placeholder = "$i18nSomeSite" />
-            <input type = "button" value = "$i18nGenerateCode" class = "button delete"/>
+            <input type = "button" value = "$i18nGenerateCode" name = "email-tunnel-generate-exit-code-button" id = "email-tunnel-generate-exit-code-button" class = "button delete"/>
         </td>
     </tr>
-    <tr class = "entrance-site-url-row">
+    <tr id = "received-connection-code-row" >
         <th>$i18nConnectionCode</th>
-        <td>
-123443245 DO NOT CLOSE THIS TAB UNTIL YOU CONNECT. You cannot retrieve this code later on.
+        <td><span id = "exit-code-from-server"></span><br /><br />
+        DO NOT CLOSE THIS TAB UNTIL YOU CONNECT.<br />
+        You cannot retrieve this code later on.<br />
+                You must deliver this code to:<br /><br />
+          <a href = "" target = "_blank" id = "exit-code-from-server-delivery-link"></a><br />
         </td>
     </tr>
     <tr id = "you-are-not-connected-row">
@@ -183,7 +188,7 @@ class SettingsPage{
 		<th scope="col" id='last_used' class='manage-column'>$i18nCreatedOnCreated</th>
 		<th scope="col" id='last_ip' class='manage-column'>$i18nEmails</th>
 		<th scope="col" id='created' class='manage-column'>&nbsp</th>
-		<th scope="col" id='revoke' class='manage-column'>$i18nRevoke</th>
+		<th scope="col" id='action' class='manage-column'>$i18nAction</th>
 	</tr>
 	</thead>
 	<tbody id="the-list"></tbody>
@@ -193,7 +198,7 @@ class SettingsPage{
 		<th scope="col"  class='manage-column'>$i18nCreatedOnCreated</th>
 		<th scope="col"  class='manage-column'>$i18nEmails</th>
 		<th scope="col"  class='manage-column'>&nbsp</th>
-		<th scope="col"  class='manage-column'>$i18nRevoke</th>
+		<th scope="col"  class='manage-column'>$i18nAction</th>
 	</tr>
 	</tfoot>
 </table>

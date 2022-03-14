@@ -21,39 +21,25 @@ class TunnelEntrance{
     }
     
     public function interceptOutgoingEmail($to, $subject, $message, $headers){
-        //The url you wish to send the POST request to
-        $exitUrlBase = get_option("email_tunnel_exit_url_base");
-        $url = $exitUrlBase . "/wp-json/email-tunnel/v1/tunnel-exit/";
+        $selectedEntrance = \EmailTunnel\TunnelEntrance::getSelectedEntrance();
 
-        //The data you want to send via POST
         $fields = [
             'to'      => $to,
             'subject' => $subject,
             'message' => $message,
             'headers' => $headers
         ];
+        $fields_string = http_build_query($fields);
 
-    //url-ify the data for the POST
-    $fields_string = http_build_query($fields);
-
-    //open connection
-    $ch = curl_init();
-
-    //set the url, number of POST vars, POST data
-    curl_setopt($ch,CURLOPT_URL, $url);
-    curl_setopt($ch,CURLOPT_POST, true);
-    curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
-
-    //So that curl_exec returns the contents of the cURL; rather than echoing it
-    curl_setopt($ch,CURLOPT_RETURNTRANSFER, true); 
-
-    //execute post
-    $result = curl_exec($ch);
-    //echo $result;
-    //die();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, ($selectedEntrance['url'] . "/wp-json/email-tunnel/v1/tunnel-exit/"));
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_USERPWD, ($selectedEntrance['remote_user_name'] . ":" .  $selectedEntrance['code']));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
     }
-    // XKGovVUtU5S6HuplWfOccRYM
-    // email-tunnel:https://asia.dev
 
     public function setEntranceCredentials($url, $code, $remoteUserName, $status = "not connected"){
         $creds = get_option('email_tunnel_entrance_creds');
@@ -73,7 +59,7 @@ class TunnelEntrance{
         }
         foreach($creds as $siteItem){
             if($siteItem['status'] == "connected"){
-                return ($siteItem['url']);    
+                return ($siteItem);
             }
         }
         return false;
@@ -167,7 +153,7 @@ class TunnelEntrance{
 				}
 			)
 		);
-		
+		//die("x");
 		register_rest_route(
 			"email-tunnel/v1",
 			"add-new-exit",
@@ -229,7 +215,23 @@ class TunnelEntrance{
     }
 
     public function doCheckCredsViaCurl($url, $code, $remoteUsername){
-        return true;
+        //from https://make.wordpress.org/core/2020/11/05/application-passwords-integration-guide/
+        $url = $url . "/wp-json/wp/v2/users?context=edit";
+        $ch = curl_init();
+        curl_setopt($ch,CURLOPT_URL, $url);
+        curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_USERPWD, $remoteUsername . ":" . $code);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+
+
+        if((str_contains($result, "HTTP/1.1 200 OK")) && (str_contains($result, $remoteUsername))){
+            return true;
+         }else{
+            echo ($result);
+            exit;
+        }
     }
 
     public function doRegisterNewConnection($url, $code, $remoteUsername){

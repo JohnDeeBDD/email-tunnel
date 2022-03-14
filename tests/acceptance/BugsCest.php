@@ -4,7 +4,7 @@ use \Codeception\Util\Locator;
 
 class BugsCest
 {
-    public function YouAreNotConnectedIsVisable(\AcceptanceTester $I)
+    private function YouAreNotConnectedIsVisable(\AcceptanceTester $I)
     {
         /*
         Expected behavior:

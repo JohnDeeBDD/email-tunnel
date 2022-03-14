@@ -1,0 +1,16 @@
+<?php
+$I = new AcceptanceTester($scenario);
+
+$I->loginAsAdmin();
+$I->amOnPage("/wp-admin/tools.php?page=wp-test-email");
+$I->click("#submit");
+$I->reconfigureThisVariable(["url" => "http://18.222.202.108"]);
+$I->loginAsAdmin();
+$I->see("General Chicken Cloud Dev Server 2");
+$I->amOnPage("/wp-admin/admin.php?page=email-log");
+$I->see("mail@email.com");
+$I->moveMouseOver( '.sent_date' );
+$I->click("Delete");
+
+
+$I->reconfigureThisVariable(["url" => 'http://13.59.206.189']);

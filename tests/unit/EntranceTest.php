@@ -11,22 +11,23 @@ class EntranceTest extends \Codeception\TestCase\WPTestCase{
                 $Entrance = new \EmailTunnel\TunnelEntrance();
                 $url = "https://somesite.com";
                 $code = "123456";
-                $Entrance->setEntranceCredentials($url, $code);
+                $remoteUserName = "BobUser";
+                $Entrance->setEntranceCredentials($url, $code, $remoteUserName);
                 $option = get_option('email_tunnel_entrance_creds');
                 $expectedReturn = 
                         [
-                                ['url' => 'https://somesite.com', 'code' => '123456', 'status' => 'not connected' ] 
+                                ['url' => 'https://somesite.com', 'code' => '123456', 'status' => 'not connected', 'remote_user_name' => 'BobUser' ]
                         ];                
                 $this->assertEquals($expectedReturn, $option);
 
                 $url = "https://some-other-site.com";
                 $code = "0987654";
-                $Entrance->setEntranceCredentials($url, $code);                
+                $Entrance->setEntranceCredentials($url, $code, $remoteUserName);
                 $option = get_option('email_tunnel_entrance_creds');
                 $expectedReturn =
                         [ 
-                                ['url' => 'https://somesite.com', 'code' => '123456', 'status' => 'not connected' ],
-                                ['url' => 'https://some-other-site.com', 'code' => '0987654', 'status' => 'not connected' ] 
+                                ['url' => 'https://somesite.com', 'code' => '123456', 'status' => 'not connected', 'remote_user_name' => 'BobUser' ],
+                                ['url' => 'https://some-other-site.com', 'code' => '0987654', 'status' => 'not connected', 'remote_user_name' => 'BobUser' ]
                         ];
                 $this->assertEquals($expectedReturn, $option);
 	}
@@ -39,18 +40,19 @@ class EntranceTest extends \Codeception\TestCase\WPTestCase{
 	        $Entrance = new \EmailTunnel\TunnelEntrance();
                 $url = "https://somesite.com";
                 $code = "123456";
-                $Entrance->setEntranceCredentials($url, $code);
+                $remoteUser = "BobUser";
+                $Entrance->setEntranceCredentials($url, $code, $remoteUser);
                 $url = "https://some-other-site.com";
                 $code = "0987654";
-                $Entrance->setEntranceCredentials($url, $code);  
+                $Entrance->setEntranceCredentials($url, $code, $remoteUser);
                
                 $Entrance->setSelectedEntrance($url);
                 
                 $option = get_option('email_tunnel_entrance_creds');
                 $expectedReturn =
                         [ 
-                                ['url' => 'https://somesite.com', 'code' => '123456', 'status' => 'not connected' ],
-                                ['url' => 'https://some-other-site.com', 'code' => '0987654', 'status' => 'connected' ] 
+                                ['url' => 'https://somesite.com', 'code' => '123456', 'status' => 'not connected', 'remote_user_name' => 'BobUser' ],
+                                ['url' => 'https://some-other-site.com', 'code' => '0987654', 'status' => 'connected' , 'remote_user_name' => 'BobUser' ]
                         ];
                 $this->assertEquals($expectedReturn, $option);
                
@@ -70,15 +72,23 @@ class EntranceTest extends \Codeception\TestCase\WPTestCase{
          $code = "123456";
          $remoteUsername = "BobTheUser";
 
-         $Entrance->setEntranceCredentials($url, $code);
+         $Entrance->setEntranceCredentials($url, $code, $remoteUsername);
          $url = "https://some-other-site.com";
-          $code = "0987654";
-                $Entrance->setEntranceCredentials($url, $code);  
+         $code = "0987654";
+         $Entrance->setEntranceCredentials($url, $code, $remoteUsername);
                
-                $Entrance->setSelectedEntrance($url);
+         $Entrance->setSelectedEntrance($url);
 	        
-	        $entranceUrl = $Entrance->getSelectedEntrance();
-	        $this->assertEquals($url, $entranceUrl);
+	     $entranceUrl = $Entrance->getSelectedEntrance();
+	     $answer = var_export($entranceUrl);
+         $expected = [
+             'url' => 'https://some-other-site.com',
+             'code' => '0987654',
+             'remote_user_name' => 'BobTheUser',
+             'status' => 'connected'
+         ];
+
+	     $this->assertEquals($expected, $entranceUrl);
 	  }
 	  
 	 /**
@@ -89,10 +99,10 @@ class EntranceTest extends \Codeception\TestCase\WPTestCase{
 	        $Entrance = new \EmailTunnel\TunnelEntrance();
                 $url = "https://somesite.com";
                 $code = "123456";
-                $Entrance->setEntranceCredentials($url, $code);
+                $Entrance->setEntranceCredentials($url, $code, "bob");
                 $url = "https://some-other-site.com";
                 $code = "0987654";
-                $Entrance->setEntranceCredentials($url, $code);  
+                $Entrance->setEntranceCredentials($url, $code, "bob");
            	        
 	        $entranceUrl = $Entrance->getSelectedEntrance();
 	        $this->assertEquals(FALSE, $entranceUrl);

@@ -5,35 +5,41 @@ namespace EmailTunnel;
 class TunnelExit{
     
     public function openTunnelExit(){
-        //die("exit open");    
-        \add_action ('rest_api_init', [$this, 'doRegisterRoutes']);
+        //die("exit open");
+        \add_action ('rest_api_init', [$this, 'doOpenExitAPI']);
+    }
+
+    public function doOpenExitAPI(){
+        register_rest_route(
+            "email-tunnel/v1",
+            "tunnel-exit",
+            array(
+                'methods' => ['POST', 'GET'],
+                'callback' => function () {
+                    return new \WP_REST_Response(
+                        [
+                            'status' => 200,
+                            'response' => "OK",
+                            'body_response' => ($this->doSendMail()),
+                        ]
+                    );
+                },
+                'permission_callback' => function () {
+                    //return true;
+                    if (current_user_can("install_plugins")) {
+                        return true;
+                    }else {
+                        return false;
+                    }
+                },
+                'validate_callback' => function () {
+                    return true;
+                }
+            )
+        );
     }
     
     public function doRegisterRoutes(){
-		register_rest_route(
-			"email-tunnel/v1",
-			"tunnel-exit",
-			array(
-				'methods' => ['POST', 'GET'],
-				'callback' => function () {	    	    
-					return new \WP_REST_Response(
-						[
-							'status' => 200,
-							'response' => "OK",
-							'body_response' => ($this->doSendMail()),
-						]
-					);
-				},
-				'permission_callback' => function () {
-					return true;
-					//return (current_user_can('edit_post', $_REQUEST['post-id']));
-				},
-				'validate_callback' => function () {
-					return true;
-				}
-			)
-		);
-		
 		register_rest_route(
 			"email-tunnel/v1",
 			"tunnel-exit-ui-data",
@@ -55,6 +61,35 @@ class TunnelExit{
 				}
 			)
 		);
+
+		register_rest_route(
+            "email-tunnel/v1",
+            "add-new-entrance",
+            array(
+                'methods' => ['POST', 'GET'],
+                'callback' => function () {
+                    return $this->handleAddNewEntranceApiRequest();
+                },
+                'permission_callback' => function () {
+                    return true;
+                    //return (current_user_can('edit_post', $_REQUEST['post-id']));
+                },
+                'validate_callback' => function () {
+                    return true;
+                }
+            )
+        );
+    }
+
+    public function handleAddNewEntranceApiRequest(){
+        $userId = get_current_user_id();
+        $name = "email-tunnel:" . $_REQUEST['url'];
+        $uuid = $this->getApplicationPasswordUUIDByName($name, $userId);
+        //return $uuid;
+        if($uuid){
+            $this->removeExitCred($_REQUEST['url'], $userId);
+        }
+        return TunnelExit::createNewExitCred($_REQUEST['url'], $userId);
     }
     
     public function doSendMail(){
@@ -102,4 +137,10 @@ class TunnelExit{
         }
         return false;
     }
+
+    public static function createNewExitCred($remoteSiteUrl, $userId){
+        $app_pass = \WP_Application_Passwords::create_new_application_password( $userId, array( 'name' => ("email-tunnel:" . $remoteSiteUrl) ) );
+        return $app_pass;
+    }
+
 }

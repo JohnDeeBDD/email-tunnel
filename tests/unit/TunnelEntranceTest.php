@@ -44,11 +44,12 @@ class TunnelEntranceTest extends \Codeception\TestCase\WPTestCase{
 
         //When getSelectedEntrance() is called
         $Entrance = new EmailTunnel\TunnelEntrance();
-        $entranceUrl = $Entrance->getSelectedEntrance();
+        $selectedEntrance = $Entrance->getSelectedEntrance();
 
         //Then the selected site's url, code, and remote user-name should be returned
         $mockDataSelectedUrl = "https://some-other-site.com";
-        $this->assertEquals($mockDataSelectedUrl, $entranceUrl);
+        //var_dump($entranceUrl);die();
+        $this->assertEquals($mockDataSelectedUrl, $selectedEntrance['url']);
     }
 
 
@@ -66,17 +67,17 @@ class TunnelEntranceTest extends \Codeception\TestCase\WPTestCase{
 
             //When getSelectedEntrance() is called
             $Entrance = new \EmailTunnel\TunnelEntrance();
-            $resultUrl = $Entrance->getSelectedEntrance();
+            $selectedEntrance = $Entrance->getSelectedEntrance();
 
             //Then the result should not be the not selected url
-            $this->assertNotEquals($mockDataNotSelectedUrl, $resultUrl);
+            $this->assertNotEquals($mockDataNotSelectedUrl, $selectedEntrance['url']);
 
             //When setSelectedEntrance() is called with the unselected entrance
             $Entrance->setSelectedEntrance($mockDataNotSelectedUrl);
             //And getSelectedEntrance() is called
             //Then the new URL should be selected
-            $resultUrl = $Entrance->getSelectedEntrance();
-            $this->assertEquals($mockDataNotSelectedUrl, $resultUrl);
+            $selectedEntrance = $Entrance->getSelectedEntrance();
+            $this->assertEquals($mockDataNotSelectedUrl, $selectedEntrance['url']);
 	 }
 	 
 

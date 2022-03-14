@@ -2,7 +2,7 @@
 
 class ValidationsCest
 {
-    public function userEntersValidData(\AcceptanceTester $I)
+    private function userEntersValidData(\AcceptanceTester $I)
     {
         $I->loginAsAdmin();
         $I->amOnPage("/wp-admin/tools.php?page=email-tunnel");
@@ -19,7 +19,7 @@ class ValidationsCest
         $I->see($validSiteUrlWithSSL);
     }
 
-    public function userEntersInValidData(\AcceptanceTester $I)
+    private function userEntersInValidData(\AcceptanceTester $I)
     {
         $I->loginAsAdmin();
         $I->amOnPage("/wp-admin/tools.php?page=email-tunnel");

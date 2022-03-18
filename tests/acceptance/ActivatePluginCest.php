@@ -72,8 +72,10 @@ class ActivatePluginCest
 
     public function sendEmail(\AcceptanceTester $I){
         global $testSiteURLs;
+        $I->reconfigureThisVariable(['url' => $testSiteURLs[0]]);
         $I->amOnUrl($testSiteURLs[0]);
         $I->loginAsAdmin();
+        $I->see("General Chicken Cloud Dev Server");
         $I->amOnPage("/wp-admin/tools.php?page=wp-test-email");
         $I->waitForElementVisible(['id' => "submit"], 3);
         $I->click("#submit");

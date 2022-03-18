@@ -78,3 +78,10 @@ add_action ('rest_api_init', [new \EmailTunnel\TunnelEntrance, 'register_API_Rou
 
 //REMOVE THIS IN PROD:
 add_filter( 'wp_is_application_passwords_available', '__return_true' );
+
+require_once (plugin_dir_path(__FILE__). 'src/EmailTunnel/plugin-update-checker-4.11/plugin-update-checker.php');
+$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+    'http://example.com/path/to/details.json',
+    __FILE__, //Full path to the main plugin file or functions.php.
+    'unique-plugin-or-theme-slug'
+);

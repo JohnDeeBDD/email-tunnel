@@ -4,8 +4,8 @@ namespace Helper;
 global $testSiteURLs;
 $testSiteURLs =
     [
-        'http://13.59.206.189',
-        'http://18.222.202.108'
+        'http://3.19.31.232',
+        'http://18.117.155.89'
     ];
 
 class Acceptance extends \Codeception\Module{

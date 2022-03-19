@@ -1,0 +1,8 @@
+ {
+ 	"name" : "Email Tunnel",
+ 	"version" : "8.0",
+ 	"download_url" : "https://email-tunnel.com/wp-content/uploads/email-tunnel-8.0.zip",
+ 	"sections" : {
+ 		"description" : "Email Tunnel lets you activate email on any WordPress install."
+ 	}
+ }

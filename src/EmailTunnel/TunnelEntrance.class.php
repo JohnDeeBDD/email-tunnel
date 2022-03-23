@@ -226,7 +226,7 @@ class TunnelEntrance{
         $result = curl_exec($ch);
 
 
-        if((str_contains($result, "HTTP/1.1 200 OK")) && (str_contains($result, $remoteUsername))){
+        if(str_contains($result, "HTTP/1.1 200 OK")){
             return true;
          }else{
             echo ($result);

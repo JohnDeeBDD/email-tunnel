@@ -1,0 +1,20 @@
+{
+  "name" : "Email Tunnel",
+  "slug" : "email-tunnel",
+  "author" : "<a href='https://asiamayfield.dev'>Asia Mayfield</a>",
+  "author_profile" : "https://asiamayfield.dev",
+  "version" : "2.0",
+  "download_url" : "https://email-tunnel.com/wp-content/uploads/misha-update-checker-2.0.zip",
+  "requires" : "3.0",
+  "tested" : "5.9",
+  "requires_php" : "5.3",
+  "last_updated" : "2021-01-30 02:10:00",
+  "sections" : {
+    "description" : "Enable email on any site",
+    "installation" : "Click the activate button and that's it."
+  },
+  "banners" : {
+    "low" : "https://rudrastyh.com/wp-content/uploads/updater/banner-772x250.jpg",
+    "high" : "https://rudrastyh.com/wp-content/uploads/updater/banner-1544x500.jpg"
+  }
+}

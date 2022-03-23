@@ -5,17 +5,15 @@
  * Description: 
  * Donate Link: 
  * Author: 
- * Version: 8.0
+ * Version: 2.1
  * Author URI: 
  * Text Domain: email-tunnel
  */
 
 
-//die("email-tunnel");
+//die("email-tunnel balls out ");
 
 require_once (plugin_dir_path(__FILE__). 'src/EmailTunnel/autoloader.php');
-
-
 
 $tunnelStatus = \EmailTunnel\Connections::getSiteStatus();
 //var_dump($tunnelStatus);die();
@@ -86,3 +84,9 @@ $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
     __FILE__, //Full path to the main plugin file or functions.php.
     'email-tunnel'
 );
+
+
+function activationHook() {
+    \EmailTunnel\Connections::activatePlugin();
+}
+register_activation_hook( __FILE__, 'activationHook' );

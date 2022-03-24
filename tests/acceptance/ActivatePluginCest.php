@@ -10,10 +10,10 @@ class ActivatePluginCest
         $I->see("Howdy, Codeception");
 
         $I->wantTo("deactivate the plugin");
-        shell_exec("wp plugin deactivate email-tunnel");
+        //shell_exec("wp plugin deactivate email-tunnel");
 
-        shell_exec("wp option delete email_tunnel_entrance_creds");
-        shell_exec("wp option delete email_tunnel_site_status");
+        //shell_exec("wp option delete email_tunnel_entrance_creds");
+        //shell_exec("wp option delete email_tunnel_site_status");
 
 
         $I->wantTo('Activate the plugin');
@@ -27,7 +27,7 @@ class ActivatePluginCest
         $I->see("tunnel is closed.");
         $I->click("#email-tunnel-status-radio-entrance");
         $I->see("Exit Site URL");
-        global $testSiteURLs;
+        $testSiteURLs = $this->getSiteUrls();
         $I->reconfigureThisVariable(['url' => $testSiteURLs[1] ]);
         $I->loginAsAdmin();
         $I->see("Howdy, Codeception");

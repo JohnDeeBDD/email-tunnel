@@ -30,3 +30,4 @@ node_modules/
 /tests/_output/
 composer.lock
 package-lock.json
+servers.json

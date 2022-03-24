@@ -1,13 +1,6 @@
 <?php
 namespace Helper;
 
-global $testSiteURLs;
-$testSiteURLs =
-    [
-        'http://13.59.67.233',
-        'http://3.16.168.124'
-    ];
-
 class Acceptance extends \Codeception\Module{
     public function reconfigureThisVariable($array){
         $this->getModule('WPWebDriver')->_reconfigure($array);
@@ -28,5 +21,9 @@ class Acceptance extends \Codeception\Module{
         $line = fgets($handle);
         fclose($handle);
         echo "\n";
+    }
+
+    public function getSiteUrls(){
+        return json_decode(file_get_contents('/var/www/html/wp-content/plugins/email-tunnel/servers.json'), true);
     }
 }
